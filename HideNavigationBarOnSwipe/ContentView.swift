@@ -8,14 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var hideNavBar: Bool = true
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationStack {
+            List {
+                ForEach(1...50, id: \.self) { index in
+                    NavigationLink {
+                        List {
+                            ForEach(1...50, id: \.self) { index in
+                                Text("Sub Item \(index)")
+                            }
+                        }
+                        .navigationTitle("Item \(index)")
+                        .hideNavigationBarOnSwipe(false)
+                    } label: {
+                        Text("List Item \(index)")
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .navigationTitle("Hide On Swipe")
+            .toolbar(content: {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        hideNavBar.toggle()
+                    } label: {
+                        Image(systemName: hideNavBar ? "eye.slash" : "eye")
+                    }
+                }
+            })
+            .hideNavigationBarOnSwipe(hideNavBar)
         }
-        .padding()
     }
 }
 
